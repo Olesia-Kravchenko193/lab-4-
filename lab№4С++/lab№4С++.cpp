@@ -9,8 +9,14 @@ void Task1()
 	char ch[100];
 	string str = "He likes to eat";
 	strcpy_s(ch, str.c_str());//перевод массив чаров в строку
-	ch[1] = ' ';
-	ch[3] = ' ';
+	for (int i = 1; i < strlen(ch); i++)
+	{
+		ch[i] = ch[i + 1];
+	}
+	for (int i = 2; i < strlen(ch); i++)
+	{
+		ch[i] = ch[i + 1];
+	}
 	str = ch;
 	cout << str;
 }
@@ -32,46 +38,58 @@ void Task2()
 
 void Task3()
 {
-	string inp = "Work hard to get what you like, otherwise you'll be forced to just like what you get", out = "";//out - наша строка с готовым "продуктом"
-	int endfirst = 0;
-	char inp_mas[500], first[10], last[10];
+	string inp = "    Work  hard to get what you like, otherwise you'll be forced to just like what you  get    ", out = "";//out - наша строка с готовым "продуктом"
+	int endfirst = 0, beginfirst = 0, beginlast = 0, endlast = 0;
+
+	char inp_mas[500];
+
 	strcpy_s(inp_mas, inp.c_str());
-	int last_spacepos;
-	for (int i = 0; i < strlen(inp_mas); i++)
+
+	for (size_t i = 0; i < strlen(inp_mas); i++)
 	{
-		if (inp_mas[i] == ' ') last_spacepos = i;// находим место, где находится последний пробел в строке
+		if (inp_mas[i] == ' ' && (isalpha((unsigned char)inp_mas[i - 1]) || inp_mas[i - 1] == '`')) endlast = i;
 	}
 
-	for (int i = last_spacepos + 1; i < strlen(inp_mas); i++)//записываем последнее слово в начало строки новой
+	for (int i = 0; i < endlast; i++)
+	{
+		if (inp_mas[i] == ' ' && (isalpha((unsigned char)inp_mas[i + 1]) || inp_mas[i + 1] == '`')) beginlast = i + 1;
+	}
+
+
+	for (int i = 0; i < beginlast; i++)
+	{
+		if ((isalpha((unsigned char)inp_mas[i]) || inp_mas[i] == '`') && inp_mas[i + 1] == ' ')
+		{
+			endfirst = i + 1;
+			break;
+		}
+	}
+
+	for (int i = 0; i < endfirst; i++)
+	{
+		if (inp_mas[i] = ' ' && (isalpha((unsigned char)inp_mas[i + 1]) || inp_mas[i + 1] == '`'))
+		{
+			beginfirst = i + 1;
+			break;
+		}
+	}
+
+
+
+	for (int i = beginlast; i < endlast; i++)
 	{
 		out += inp_mas[i];
 	}
-
-	for (int i = 0; i < last_spacepos; i++)
-	{
-		if (isalpha(inp_mas[i]))//проверка,является ли буквой
-		{
-			endfirst = i;
-		}
-		else { break; }//как только встречаем пробел - заканчиваем цикл
-	}
-
-	for (int i = endfirst + 1; i < last_spacepos; i++)//записываем все элементы от конца первого слова до конца последнего
+	for (int i = endfirst; i < beginlast; i++)
 	{
 		out += inp_mas[i];
 	}
-
-	out += ' ';//добавляем пробел потому что он теряется после считывания
-	for (int i = 0; i < last_spacepos; i++)//записываем первое слово в конец
+	for (int i = beginfirst; i < endfirst; i++)
 	{
-		if (isalpha(inp_mas[i]))
-		{
-			out += inp_mas[i];
-		}
-		else { break; }
+		out += inp_mas[i];
 	}
-	cout << inp << "\n\n";
-	cout << endl << out;
+	cout << inp << endl;
+	cout << out;
 
 }
 
